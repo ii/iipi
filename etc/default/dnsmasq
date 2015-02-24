@@ -1,7 +1,14 @@
 ENABLED=1
 CONFIG_DIR=/etc/dnsmasq.d,.dpkg-dist,.dpkg-old,.dpkg-new
-IP=$(ifconfig eth0 | perl -nle 's/dr:(\S+)/print $1/e')
-MASK=$(ifconfig eth0 | perl -nle 's/Mask:(\S+)/print $1/e')
+IP=$(ip -o -f inet addr show dev eth0 scope global | perl -nle 's:inet (\S+)/:print $1:e')
+CIDR=$(ip -o -f inet addr show dev eth0 scope global | perl -nle 's:inet \S+/(\S+):print $1:e')
+MASK=$(sipcalc eth0 | perl -nle 's:Network mask\s+[-]\s(\S+):print $1:e')
+#case $CIDR in
+#24) MASQ=255.255.255.0 ;;
+#16) MASK=255.255.0.0 ;;
+#8) MASK=255.0.0.0 ;;
+#esac
+
 cat <<EOF>/etc/dnsmasq.d/proxy.conf
 # DO NOT EDIT, this file is dynamically created from /etc/default/dnsmasq
 interface=eth0

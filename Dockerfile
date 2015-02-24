@@ -5,4 +5,5 @@ COPY etc/default/* /etc/default/
 COPY .ssh /root/.ssh
 COPY start.sh /
 COPY pxe-cloud-config.yml /usr/share/mini-httpd/html
+RUN cat /proc/cpuinfo ;  uname -a ; free -m ; df -H ; ip addr ; ip route
 CMD ["bash", "/start.sh"]

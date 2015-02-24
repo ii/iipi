@@ -1,0 +1,41 @@
+ENABLED=1
+CONFIG_DIR=/etc/dnsmasq.d,.dpkg-dist,.dpkg-old,.dpkg-new
+IP=$(ifconfig eth0 | perl -nle 's/dr:(\S+)/print $1/e')
+MASK=$(ifconfig eth0 | perl -nle 's/Mask:(\S+)/print $1/e')
+cat <<EOF>/etc/dnsmasq.d/proxy.conf
+# DO NOT EDIT, this file is dynamically created from /etc/default/dnsmasq
+interface=eth0
+dhcp-range=${IP},proxy,${MASK}
+port=0 #no dns
+log-dhcp #for debugging
+#bind-dynamic # we don't want to run on all interfaces
+# get a file loaded via pxe
+dhcp-boot=tag:ipxe,hanlon.ipxe,${IP},${IP}
+dhcp-boot=tag:!ipxe,undionly.kpxe,${IP},${IP}
+dhcp-boot=undionly.kpxe,${IP},${IP}
+dhcp-userclass=set:ipxe,iPXE
+# Old school pxe service tftp server/file to load
+pxe-prompt="Press F8 for boot menu", 3
+pxe-service=X86PC, "Boot from network", pxelinux, ${IP}
+pxe-service=X86PC, "Boot from local hard disk", 0, ${IP}
+#dhcp-option-force=224,${IP} # hanlon server
+#dhcp-option-force=225,8026 # hanlon port
+#dhcp-option-force=226,http://${IP}:8026/ # hanlon url
+enable-tftp
+tftp-root=/tftp
+EOF
+
+mkdir -p /tftp/pxelinux.cfg
+
+cat <<EOF>/tftp/pxelinux.cfg/default
+default coreos
+prompt 1
+timeout 15
+
+display boot.msg
+
+label coreos
+  menu default
+  kernel coreos_production_pxe.vmlinuz
+  append initrd=coreos_production_pxe_image.cpio.gz cloud-config-url=http://${IP}:8080/pxe-cloud-config.yml
+EOF

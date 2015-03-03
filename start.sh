@@ -6,8 +6,9 @@ username $IPMI_USER
 password $IPMI_PASSWD
 EOF
 /etc/init.d/dnsmasq start
+/etc/init.d/mini-httpd start
 # start tmate
-ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
+# ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
 tmate -S /tmp/tmate.sock new-session -d
 tmate -S /tmp/tmate.sock wait tmate-ready
 tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}' > /usr/share/mini-httpd/html/tmate

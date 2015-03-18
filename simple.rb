@@ -29,7 +29,7 @@ with_machine_options image_uuid: '692Vjhns2hc7hvYGLavlUW',
                        hostname_prefix: 'pii',
                        domainname: 'instantinfrastructure.com',
                        root_password: 'test1234',
-                       label: 'test_label_XYZ',
+                       label: 'Deploying Coreos',
                      },
                      policy: {
 #      Template                            Description                       
@@ -41,7 +41,7 @@ with_machine_options image_uuid: '692Vjhns2hc7hvYGLavlUW',
 # xenserver_hypervisor  Policy for deploying a XenServer hypervisor.
                        template: 'linux_deploy',
 # Label prefix is prepended to the nodename, the policy is for one node only
-                       label_prefix: 'ii',
+                       label_prefix: 'iicoreos',
 # Tags help us choose which servers to allocate from, we need matchers for this
                        tags: 'A',
                      }

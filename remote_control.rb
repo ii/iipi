@@ -4,11 +4,18 @@ require 'pry'
 
 def chassis(ip)
   puts "#{$action} #{ip}"
-  IO.popen("ipmi-chassis -h #{ip} --chassis-control=#{$action}")
+  if $action =~ /identify/
+    # turn off last identify before turning on next one
+    IO.popen("ipmi-chassis -h #{$last_identify} --chassis-identify=0") if $last_identify
+    IO.popen("ipmi-chassis -h #{ip} --chassis-identify=120")
+    $last_identify = ip
+  end
+  IO.popen("ipmi-chassis -h #{ip} #{$action}")
 end
 
 remote=DevInput.new '/dev/input/event0'
-$action = 'power-up'
+$action = '--chassis-control=power-up'
+$last_identify = nil
 puts "ii tv remote ready"
 puts "default action is #{$action}"
 remote.each do |event|
@@ -40,11 +47,11 @@ remote.each do |event|
       puts '9'
     when 'F8'
       #puts '-'
-      $action = 'power-down'
+      $action = '--chassis-control=power-down'
       puts "action set to #{$action}"
     when 'F7'
       #puts 'recycle'
-      $action = 'power-cycle'
+      $action = '--chassis-control=power-cycle'
       puts "action set to #{$action}"
     when 'Minus'
       puts 'Vol Up'
@@ -55,12 +62,14 @@ remote.each do |event|
     when 'Katakana'
       puts 'Ch Down'
     when 'KP2'
-      puts 'MTS'
+      #puts 'MTS'
+      $action = '--chassis-identify=120'
+      puts "action set to #{$action}"
     when 'HIRAGANA'
       puts 'C.C'
     else
       if event.code == 255
-        $action = 'power-up'
+        $action = '--chassis-control=power-up'
         puts "action set to #{$action}"
         next
       end

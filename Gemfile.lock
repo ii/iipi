@@ -1,5 +1,5 @@
 PATH
-  remote: /root/chef-provisioning-hanlon
+  remote: ../chef-provisioning-hanlon
   specs:
     chef-provisioning-hanlon (0.0.1)
       chef
@@ -7,7 +7,7 @@ PATH
       hanlon-api (~> 0.0)
 
 PATH
-  remote: /root/hanlon-api-ruby
+  remote: ../hanlon-api-ruby
   specs:
     hanlon-api (0.0.1)
       faraday

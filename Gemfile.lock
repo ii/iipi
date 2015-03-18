@@ -1,13 +1,15 @@
-PATH
-  remote: ../chef-provisioning-hanlon
+GIT
+  remote: git://github.com/hh/chef-provisioning-hanlon.git
+  revision: 15a670070c15127cc33181390941aa693f530b86
   specs:
     chef-provisioning-hanlon (0.0.1)
       chef
       chef-provisioning (~> 0.9)
       hanlon-api (~> 0.0)
 
-PATH
-  remote: ../hanlon-api-ruby
+GIT
+  remote: git://github.com/hh/hanlon-api-ruby.git
+  revision: 17ee143fbed569ed8e4745bb6a0d8aa1b34c8a72
   specs:
     hanlon-api (0.0.1)
       faraday
@@ -163,7 +165,7 @@ GEM
       rspec-its
       specinfra (~> 2.15)
     slop (3.6.0)
-    specinfra (2.19.5)
+    specinfra (2.19.6)
       net-scp
       net-ssh
     systemu (2.6.4)

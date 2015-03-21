@@ -5,14 +5,20 @@ require 'chef/provisioning/hanlon_driver/hanlon_driver'
 require 'pry'
 with_driver 'hanlon:1.1.1.11:8026/hanlon/api/v1'
 
-hanlon_tagrule 'Tagging box 6 with ' do
-  #action :delete
+hanlon_tagrule 'Tagging one box' do
   tag 'tagged'
   match %w{mk_ipmi_IP_Addres equal 1.1.0.6}
-  # would like to use this syntax...
-  #match 'mk_ipmi_IP_Addres' do
-  #  equal '1.1.0.6'
-  #end
+end
+
+# like this dsl better, but not sure how to do it
+hanlon_tagrule 'Tagging two specific boxes with 1and2' do
+  tag '1and2'
+  match 'mk_ipmi_IP_Addres' do
+    equal '1.1.1.1'
+  end
+  match 'mk_ipmi_IP_Addres' do
+    equal '1.1.1.2'
+  end
 end
 
 """json

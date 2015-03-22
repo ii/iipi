@@ -1,5 +1,6 @@
 require 'chef/provisioning'
 require 'chef/provisioning/hanlon_driver/hanlon_driver'
+require 'pry'
 
 with_driver 'hanlon:1.1.1.11:8026/hanlon/api/v1'
 
@@ -26,23 +27,21 @@ coreos_opts = {
   }
 }
 
-# can't use this in same chef-run
-# because the uuid isn't available to feed to the machine_options
-hanlon_image 'CoreOS' do
-  #action :delete
+# We need the image.uuid to feed to the machine_options
+image = hanlon_image 'CoreOS556' do
+  action :nothing
   type 'os'
   path 'coreos_production_iso_image.iso'
   version '556'
   description 'Coreos stable'
 end
+image.run_action :create
 
-# if the image is just created here... how do we use the fresh image in the next step?
-# may be we should use the name instead of the image_uuid?
-
+#I'm sure there's a better way to grab the uuid
 with_machine_options(
-  image_uuid: '1E8qR0n0qFQavIIrLsSr04',
+  image_uuid: image.provider_for_action(:create).load_current_resource.uuid ,
   model: {
-    label: 'Deploying Coreos Again',
+    label: 'Deploying Coreos  on 6',
     template: 'coreos_stable',
     req_metadata_params: {
       hostname_prefix: 'pii',
@@ -50,16 +49,16 @@ with_machine_options(
     }.merge(coreos_opts),
   },
   policy: {
-    label_prefix: 'ii-core-baby',
+    label_prefix: 'ii-core6',
     template: 'linux_deploy',
     # for now let's use the automatic hw_id tag
-    #    tags: '00000000-0000-0000-0000-002590E252B8', #6
-    tags: '00000000-0000-0000-0000-002590E254EC' #5
+    tags: '00000000-0000-0000-0000-002590E252B8', #6
+    #tags: '00000000-0000-0000-0000-002590E254EC' #5
   }
 )
   
 
-machine 'coreos' do
+machine 'coreos6' do
   action :setup
   tag "coreos!"
   converge false

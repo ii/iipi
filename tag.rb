@@ -5,21 +5,45 @@ require 'chef/provisioning/hanlon_driver/hanlon_driver'
 require 'pry'
 with_driver 'hanlon:1.1.1.11:8026/hanlon/api/v1'
 
-hanlon_tagrule 'Tagging one box' do
-  tag 'tagged'
-  match %w{mk_ipmi_IP_Addres equal 1.1.0.6}
-end
+#hanlon_tagrule 'Tagging one box' do
+#  tag 'tagged'
+#  match %w{mk_ipmi_IP_Addres equal 1.1.0.6}
+#end
 
 # like this dsl better, but not sure how to do it
-hanlon_tagrule 'Tagging two specific boxes with 1and2' do
-  tag '1and2'
-  match 'mk_ipmi_IP_Addres' do
-    equal '1.1.1.1'
-  end
-  match 'mk_ipmi_IP_Addres' do
-    equal '1.1.1.2'
-  end
+hanlon_tag 'Tag one with A' do
+  match 'mk_ipmi_IP_Address' { equal '1.1.1.1' }
+  tag 'A'
 end
+
+hanlon_tag 'Tag one with 1' do
+  match 'mk_ipmi_IP_Address' { equal '1.1.1.1' }
+  tag '1'
+end
+
+hanlon_tag 'Tag one with 1' do
+  match 'mk_ipmi_IP_Address' { like '1.1.1.1' }
+  tag '1'
+end
+
+hanlon_tag 'Tag two with A' do
+  match 'mk_ipmi_IP_Addres' { equal '1.1.1.1' }
+  tag 'A'
+end
+
+# field value tags
+hanlon_tag 'Product' do
+  field 'mk_hw_bus_product'
+end
+
+hanlon_tag 'Serial' do
+  field 'mk_hw_bus_serial'
+end
+
+#    "mk_hw_bus_product": "X9SRD-F",
+#    "mk_hw_bus_vendor": "Supermicro",
+#    "mk_hw_bus_serial": "ZM28S45630",
+
 
 """json
    "4RlKAWmjx077lUfFIXrP0i": {

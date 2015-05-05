@@ -1,10 +1,11 @@
 require 'chef/provisioning'
 require 'chef/provisioning/hanlon_driver/hanlon_driver'
+require 'pry'
 
 with_driver 'hanlon:1.1.1.11:8026/hanlon/api/v1'
 
-num = ENV['HARDWARE_TARGET'] || '2'
-deploy="coreos_on_#{num}"
+num = ENV['HARDWARE_TARGET'] || '1'
+deploy="coreos_inmem_on_#{num}"
 
 hanlon_image 'coreos_production_iso_image.iso' do
   type 'os'
@@ -15,12 +16,11 @@ end
 hanlon_model "#{deploy}" do
   action :delete if ENV['DESTROY']
   image 'coreos_production_iso_image.iso'
-  template 'coreos_stable'
+  template 'coreos_in_memory'
   metadata ({
-              hostname_prefix: 'iicoremem',
+              hostname_prefix: 'iicoreos',
               domainname: 'vulk.can.cd',
               cloud_config: {
-                install_disk: '/dev/sda',
                 users: [{ name: 'hh','coreos-ssh-import-github' =>  'hh',
                           groups: [ 'sudo', 'docker']}],
                 coreos: { units: [
@@ -36,4 +36,4 @@ hanlon_policy "#{deploy}" do
   maximum 1
 end
 
-bash "ipmi-chassis -h 1.1.0.#{num} --chassis-control=power-up"
+execute "ipmi-chassis -h 1.1.0.#{num} --chassis-control=power-up"

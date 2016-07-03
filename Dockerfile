@@ -2,9 +2,6 @@ FROM resin/rpi-raspbian:wheezy
 
 MAINTAINER Chris McClimans <hh@ii.org.nz>
 
-RUN gpg -a --export 8B48AD6246925553 | sudo apt-key add -
-RUN gpg -a --export 7638D0442B90D010 | sudo apt-key add -
-
 RUN echo 'deb http://httpredir.debian.org/debian unstable main non-free contrib' >> /etc/apt/sources.list \
 	&& echo 'Package: *' >> /etc/apt/preferences.d/pin \
 	&& echo 'Pin: release a=stable' >> /etc/apt/preferences.d/pin \
@@ -13,6 +10,9 @@ RUN echo 'deb http://httpredir.debian.org/debian unstable main non-free contrib'
 	&& echo 'Package: *' >> /etc/apt/preferences.d/pin \
 	&& echo 'Pin: release a=stable' >> /etc/apt/preferences.d/pin \
 	&& echo 'Pin-Priority: 1000' >> /etc/apt/preferences.d/pin
+
+RUN apt-get update -y \
+  apt-get install -y debian-keyring debian-archive-keyring
 
 # Install the required dependencies
 RUN apt-get update -y \

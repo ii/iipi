@@ -2,6 +2,9 @@ FROM resin/rpi-raspbian:wheezy
 
 MAINTAINER Chris McClimans <hh@ii.org.nz>
 
+RUN gpg -a --export 8B48AD6246925553 | sudo apt-key add -
+RUN gpg -a --export 7638D0442B90D010 | sudo apt-key add -
+
 RUN echo 'deb http://httpredir.debian.org/debian unstable main non-free contrib' >> /etc/apt/sources.list \
 	&& echo 'Package: *' >> /etc/apt/preferences.d/pin \
 	&& echo 'Pin: release a=stable' >> /etc/apt/preferences.d/pin \
@@ -13,7 +16,9 @@ RUN echo 'deb http://httpredir.debian.org/debian unstable main non-free contrib'
 
 # Install the required dependencies
 RUN apt-get update -y \
-	&& apt-get install -y libxml2 gettext libfuse-dev libattr1-dev git build-essential libssl-dev p7zip-full fuseiso ipmitool libbz2-dev \
+	&& apt-get install -y apt-utils libxml2 gettext libfuse-dev libattr1-dev \
+     git build-essential libssl-dev p7zip-full fuseiso ipmitool libbz2-dev \
+     autotools-dev \
 	&& mkdir -p /usr/src/wimlib-code \
 	&& mkdir -p /home/hanlon \
 	&& git clone git://wimlib.net/wimlib /usr/src/wimlib-code \

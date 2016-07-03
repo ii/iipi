@@ -18,4 +18,12 @@ echo "root:$PASSWD" | chpasswd
 #Spawn dropbear
 chmod 600 /root/.ssh/authorized_keys
 chmod 700 /root/.ssh
-dropbear -E -F
+# dropbear -E -F
+
+./hanlon_init -j '{"hanlon_static_path": "'$HANLON_STATIC_PATH'", "hanlon_subnets": "'$HANLON_SUBNETS'", "hanlon_server": "'$DOCKER_HOST'", "persist_host": "'$MONGO_PORT_27017_TCP_ADDR'", "ipmi_utility": "ipmitool"}'
+fi
+
+cd ${HANLON_WEB_PATH}
+
+PORT=`awk '/api_port/ {print $2}' config/hanlon_server.conf`
+puma -p ${PORT} $@ 2>&1 | tee /tmp/puma.log

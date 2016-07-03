@@ -12,7 +12,7 @@ RUN echo 'deb http://httpredir.debian.org/debian unstable main non-free contrib'
 	&& echo 'Pin-Priority: 1000' >> /etc/apt/preferences.d/pin
 
 RUN apt-get update -y \
-  apt-get install -y debian-keyring debian-archive-keyring
+  && apt-get install -y debian-keyring debian-archive-keyring
 
 # Install the required dependencies
 RUN apt-get update -y \

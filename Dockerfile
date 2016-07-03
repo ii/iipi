@@ -17,7 +17,7 @@ RUN apt-get update -y \
 # Install the required dependencies
 RUN apt-get install -y libxml2 gettext libfuse-dev libattr1-dev \
     git build-essential libssl-dev p7zip-full fuseiso ipmitool libbz2-dev \
-    autotools-dev autoconf
+    autotools-dev autoconf automake
 
 RUN mkdir -p /usr/src/wimlib-code \
 	&& mkdir -p /home/hanlon \
